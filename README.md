@@ -12,7 +12,9 @@ An app to explain the basics of ZIO
 9. Error types - In a for comprehension, Error types must match, or you will get a compile error. mapError can help [example6]
 10. Succeed / attempt can wrap expressions. ZIO.succeed for pure code, no exceptions, ZIO.attempt for exceptions [example7]
 11. Layers (requires services and provides services). ZIO's dependency injection. [example8, example9, example10, example11]
-12. Running in parallel
+12. Running in parallel [example12, example13]
+13. Turning a future into a ZIO [example14]
+14. Running a ZIO as a future [example15]
 
 
 References

@@ -1,14 +1,17 @@
-import zio.{Duration, IO, Task, ZIO, ZIOAppDefault}
+import zio.{CancelableFuture, Duration, IO, Task, URIO, ZIO, ZIOAppDefault}
 
 import java.io.IOException
+import java.util.concurrent.CompletableFuture
+import scala.concurrent.Future
 
 object Main extends ZIOAppDefault {
 
   override def run: ZIO[Any, Throwable, Unit] = {
-    example1
+    example1.flatMap(_ => example2)
+    example13 *> ZIO.unit
   }
 
-  val example1: IO[IOException, Unit] = zio.Console.printLine("write to console")
+  val example1: ZIO[Any, IOException, Unit] = zio.Console.printLine("write to console")
 
   val example2: IO[IOException, Unit] = zio.Console.printLine("write to console 2")
 
@@ -62,5 +65,12 @@ object Main extends ZIOAppDefault {
   val example12: ZIO[Any, Nothing, List[Unit]] = ZIO.collectAll(List.fill(2)(waitAndLog))
 
   val example13: ZIO[Any, Nothing, List[Unit]] = ZIO.collectAllPar(List.fill(5)(waitAndLog))
+
+  // N.b. needs to be a def otherwise it will have already run before converting to ZIO
+  def fut = Future.successful("")
+
+  val example14: Task[String] = ZIO.fromFuture(e => fut)
+
+  val example15: Task[URIO[Any, CancelableFuture[String]]] = ZIO.attemptUnsafe(_ => ZIO.fromFuture(_ => fut).toFuture)
 
 }
