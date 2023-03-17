@@ -1,4 +1,4 @@
-import zio.{IO, Task, ZIO, ZIOAppDefault}
+import zio.{Duration, IO, Task, ZIO, ZIOAppDefault}
 
 import java.io.IOException
 
@@ -6,7 +6,6 @@ object Main extends ZIOAppDefault {
 
   override def run: ZIO[Any, Throwable, Unit] = {
     example1
-    example2
   }
 
   val example1: IO[IOException, Unit] = zio.Console.printLine("write to console")
@@ -27,15 +26,18 @@ object Main extends ZIOAppDefault {
   case class MyErrorType(message: String)
   case class MySuccessType()
 
-  val myFunc: IO[MyErrorType, MySuccessType] =
-    if (false) ZIO.fail(MyErrorType("Its false!"))
-    else ZIO.succeed(MySuccessType())
+  val example6: IO[MyErrorType, MySuccessType] = {
 
-  val example6: IO[MyErrorType, MySuccessType] = for {
-    _ <- example1
-           .mapError(e => MyErrorType(e.getMessage))
-    result <- myFunc
-  } yield result
+    val myFunc: IO[MyErrorType, MySuccessType] =
+      if (false) ZIO.fail(MyErrorType("Its false!"))
+      else ZIO.succeed(MySuccessType())
+
+    for {
+      _ <- example1
+        .mapError(e => MyErrorType(e.getMessage))
+      result <- myFunc
+    } yield result
+  }
 
   val example7: Task[Int] = ZIO.attempt(1 / 0)
 
@@ -54,5 +56,11 @@ object Main extends ZIOAppDefault {
   } yield result
 
   val example11: ZIO[Any, Throwable, Double] = example10.provide(BigService.bigServiceLayer, NumberService.myRandomNumberLayer)
+
+  val waitAndLog = ZIO.sleep(Duration.fromSeconds(5)) &> ZIO.log("finished after 5 seconds")
+
+  val example12: ZIO[Any, Nothing, List[Unit]] = ZIO.collectAll(List.fill(2)(waitAndLog))
+
+  val example13: ZIO[Any, Nothing, List[Unit]] = ZIO.collectAllPar(List.fill(5)(waitAndLog))
 
 }
