@@ -1,4 +1,4 @@
-A basic zio app to explain the basics of ZIO
+An app to explain the basics of ZIO
 
 
 1. ZIO is a functional effect system (like monix, cats effect etc.)
