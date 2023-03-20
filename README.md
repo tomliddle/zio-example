@@ -15,6 +15,8 @@ An app to explain the basics of ZIO
 12. Running in parallel [example12, example13]
 13. Turning a future into a ZIO [example14]
 14. Running a ZIO as a future [example15]
+15. ZIO and option [example16]
+16. ZIO and either [example17]
 
 
 References

@@ -73,4 +73,8 @@ object Main extends ZIOAppDefault {
 
   val example15: Task[URIO[Any, CancelableFuture[String]]] = ZIO.attemptUnsafe(_ => ZIO.fromFuture(_ => fut).toFuture)
 
+  val example16: ZIO[Any, Option[Nothing], String] = ZIO.fromOption(Some("")) // or ZIO.from(Some("")) or ZIO.some("")
+
+  val example17: IO[Exception, String] = ZIO.fromEither(Right("").withLeft[Exception]) // or ZIO.from(Right("").withLeft[Exception]) or ZIO.right("")
+
 }
